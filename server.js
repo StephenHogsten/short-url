@@ -23,7 +23,8 @@ app.get('/new/:url', function(req, res) {
       if (err) throw err;
       console.log('inside fn promise, current val: ' + data[0].counter);
       //make new URL
-      var newURL = 'https://shorten-url-hogdogthegod.c9users.io/' + data[0].counter;
+      var count = data[0].counter;
+      var newURL = 'https://shorten-url-hogdogthegod.c9users.io/' + count;
       var newObj = {
         'original-url': req.params.url,
         'short-url': newURL
@@ -35,6 +36,7 @@ app.get('/new/:url', function(req, res) {
       res.json(newObj);
       console.log('returned json');
       //save to DB
+      newObj['short-id'] = count;
       db.collection('urls').insert(newObj);
       console.log('saved to db');
       
@@ -47,7 +49,24 @@ app.get('/new/:url', function(req, res) {
 });
 
 app.get('/:id', function(req, res){
-  res.end('this area is not so special');
+  mongoclient.connect('mongodb://localhost:27017/appdata', function(err, db) {
+    if (err) throw err;
+    
+    var prom = db.collection('urls').find({
+      'short-id': +req.params.id
+    }).toArray();
+    prom.then(function(data) {
+      if (data.length < 1) {
+        res.json({'error':'This url is not in the database'});
+      } else {
+        res.redirect(data[0]['original-url']);
+      }
+    
+      //clean-up
+      res.end();
+      db.close();
+    })
+  })
 });
 
 app.listen(8080, function() {
