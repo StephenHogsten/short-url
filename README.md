@@ -13,3 +13,5 @@ Other resources (no code was copied):
 http://stackoverflow.com/questions/14915496/how-can-i-allow-slashes-in-my-express-routes
 https://nodejs.org/dist/latest-v6.x/docs/api/http.html#http_message_headers
 http://stackoverflow.com/questions/26007187/node-js-check-if-a-remote-url-exists
+http://stackoverflow.com/questions/22673218/default-route-in-express-js
+http://stackoverflow.com/questions/4328540/how-to-catch-http-client-request-exceptions-in-node-js
